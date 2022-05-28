@@ -7,15 +7,10 @@ import { AuthService } from './auth.service';
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @Post()
-    async validateUser(@Res() res, @Body() user: UserAuthDto) {
-        //return await this.authService.login(user);
-        return res.send(await this.authService.validateUser(user));
-    }
-
     @UseGuards(AuthGuard('local'))
     @Post('login')
     async login(@Req() req) {
-        return req.user;
+        return this.authService.login(req.user);
     }
+    
 }

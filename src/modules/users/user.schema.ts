@@ -2,7 +2,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
-import { Matches, MaxLength, MinLength } from 'class-validator';
+import { IsIn, Matches, MaxLength, MinLength } from 'class-validator';
 import shortid = require('shortid');
 import * as dayjs from 'dayjs';
 
@@ -53,6 +53,7 @@ export class User {
     lastName: string;
 
     @ApiProperty()
+    @IsIn(Object.values(UserRole))
     @Prop({ required: true })
     role: UserRole;
 
