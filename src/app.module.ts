@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { env } from 'process';
-
+import { PassportModule } from '@nestjs/passport';
 @Module({
   imports: [
     UsersModule,

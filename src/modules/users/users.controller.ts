@@ -7,15 +7,18 @@ import {
     Res,
     UseFilters,
     Param,
+    UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument, User } from './user.schema';
 import { ValidationErrorFilter } from 'src/filters/validationError.filter';
+import { AuthenticatedGuard } from 'src/guards/authenticated.guard';
 
 @Controller('users')
 @UseFilters(new ValidationErrorFilter())
 export class UsersController {
     constructor(private readonly UsersService: UsersService) {}
+    @UseGuards(AuthenticatedGuard)
     @Get()
     async getUsers() {
         return await this.UsersService.getUsers();
