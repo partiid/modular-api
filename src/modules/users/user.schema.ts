@@ -5,6 +5,7 @@ import { Document } from 'mongoose';
 import { IsIn, Matches, MaxLength, MinLength } from 'class-validator';
 import shortid = require('shortid');
 import * as dayjs from 'dayjs';
+import { Exclude } from 'class-transformer';
 
 
 export type UserDocument = User & Document;
@@ -57,8 +58,12 @@ export class User {
     @Prop({ required: true })
     role: UserRole;
 
+    @Prop()
+    @Exclude()
+    refreshToken: string;
+
     @Prop({ default: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss') })
-    createdAt: Date;
+    createdAt: string;
 
     @Prop()
     updatedAt: Date;

@@ -19,6 +19,7 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
     //global pipes
     app.useGlobalPipes(new ValidationPipe());
+    //TODO: implement global interceptors to standarize response
     await app.listen(3000);
 }
 bootstrap();

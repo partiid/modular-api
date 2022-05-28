@@ -22,10 +22,10 @@ export class UsersController {
     }
     @Get('/user/:login')
     async getUser(@Res() res, @Param('login') login: string) {
-        return res.send(await this.UsersService.getUserByUsername(login));
+        return res.send(await this.UsersService.getByUsername(login));
     }
     @Post()
     async createUser(@Res() res, @Body() user: User) {
-        return res.send(await this.UsersService.createUser(user));
+        return res.send(await this.UsersService.create(user));
     }
 }

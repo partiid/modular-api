@@ -5,9 +5,10 @@ import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './strategy/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { env } from 'process';
 import { JwtStrategy } from './strategy/jwt.strategy';
+
 
 @Module({
     controllers: [AuthController],
@@ -15,7 +16,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     imports: [
         UsersModule,
         PassportModule,
-
+        EventEmitterModule.forRoot(),
         JwtModule.register({
             secret: env.JWT_SECRET,
             signOptions: { expiresIn: '60s' },
