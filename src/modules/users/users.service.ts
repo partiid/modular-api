@@ -4,6 +4,7 @@ import {
     InternalServerErrorException,
     NotFoundException,
     UnauthorizedException,
+    Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
@@ -12,17 +13,19 @@ import { BaseExceptionFilter } from '@nestjs/core';
 
 @Injectable()
 export class UsersService {
+    private readonly logger = new Logger(UsersService.name);
     constructor(@InjectModel('User') private UserModel: Model<UserDocument>) {}
     async getUsers(): Promise<User[]> {
         return await this.UserModel.find().exec();
     }
 
     async getByUsername(username: string): Promise<User> {
+        this.logger.log(`Getting user by username: ${username}`);
         let userFound = null;
         try {
             userFound = await this.UserModel.findOne({
                 username: username,
-            }).exec();
+            });
         } catch (err) {
             throw new InternalServerErrorException(err);
         }
