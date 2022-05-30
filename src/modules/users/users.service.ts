@@ -5,11 +5,11 @@ import {
     NotFoundException,
     UnauthorizedException,
     Logger,
+    UseFilters,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { Model } from 'mongoose';
-import { BaseExceptionFilter } from '@nestjs/core';
 
 @Injectable()
 export class UsersService {

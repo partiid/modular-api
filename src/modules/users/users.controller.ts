@@ -11,11 +11,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument, User } from './user.schema';
-import { ValidationErrorFilter } from '../../filters/validationError.filter';
-import { AuthenticatedGuard } from '../../guards/auth/authenticated.guard';
 
 @Controller('users')
-@UseFilters(new ValidationErrorFilter())
 export class UsersController {
     constructor(private readonly UsersService: UsersService) {}
 

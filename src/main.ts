@@ -7,6 +7,10 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import {
+    MongooseValidationErrorFilter,
+    MongoErrorFilter,
+} from './filters/index';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -21,6 +25,8 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
     //global pipes
     app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalFilters(new MongooseValidationErrorFilter());
+    app.useGlobalFilters(new MongoErrorFilter());
     //TODO: implement global interceptors to standarize response
     //setup passport
     app.use(passport.initialize());

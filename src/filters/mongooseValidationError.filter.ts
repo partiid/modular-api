@@ -3,7 +3,7 @@ import { Error } from 'mongoose';
 import ValidationError = Error.ValidationError;
 
 @Catch(ValidationError)
-export class ValidationErrorFilter implements ExceptionFilter {
+export class MongooseValidationErrorFilter implements ExceptionFilter {
     catch(exception: ValidationError, host: ArgumentsHost): any {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();

@@ -1,10 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+    Catch,
+    ConflictException,
+    Injectable,
+    Logger,
+    NotFoundException,
+    UseFilters,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { UserAuthDto } from '../users/dto/userAuth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { env } from 'process';
 import { User } from '../users/user.schema';
-
+import { JwtPayload } from './strategy/jwt.strategy';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
@@ -18,15 +26,19 @@ export class AuthService {
      * @returns object with access and refresh token
      */
     async createTokens(passportResult: any) {
-        //this.logger.log(`Creating tokens for user:`, user);
+        //get the userid to store in
         const { user_id } = await this.usersService.getByUsername(
             passportResult._doc.username,
         );
 
-        const payload = {
+        /**
+         * @see auth/strategy/jwt.strategy
+         */
+
+        const payload: JwtPayload = {
             username: passportResult.username,
             sub: passportResult.userId,
-            userId: user_id,
+            _userId: user_id,
         };
 
         const accessToken = this.jwtService.sign(payload);
@@ -34,10 +46,11 @@ export class AuthService {
             {
                 sub: passportResult.userId,
                 username: passportResult.username,
-                userId: user_id,
+                _userId: user_id,
             },
             { secret: env.JWT_REFRESH_SECRET, expiresIn: '7d' },
         );
+
         return {
             accessToken,
             refreshToken,
@@ -45,7 +58,7 @@ export class AuthService {
     }
     /**
      * @param dto: UserAuthDto - username and password
-     * @description - Validate user credentials. This function is called first in local.strategy
+     * @description - Validate user credentials based on localstrategy. This function is called first in local.strategy
      * @see auth/strategy/local.strategy
      * @returns passport user object
      */
@@ -68,13 +81,34 @@ export class AuthService {
         const { _doc } = user;
         const { user_id } = _doc;
 
-        //await this.usersService.setRefreshToken(user_id, refreshToken);
-
         return {
             access_token: accessToken,
             refresh_token: refreshToken,
         };
     }
 
-    async signup(user: User) {}
+    /**
+     * @param user: User
+     * @description - register a user and add a user with the data provided
+     */
+
+    async register(dto: User) {
+        //check if user already exists
+        const { username } = dto;
+        try {
+            const user = await this.usersService.getByUsername(username);
+            if (user) {
+                throw new ConflictException('User already exists');
+            }
+        } catch (e: any) {
+            //hash password
+            const { password, ...userData } = dto;
+            const salt = 10;
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            dto = { password: hashedPassword, ...userData };
+
+            return await this.usersService.create(dto);
+        }
+    }
 }
