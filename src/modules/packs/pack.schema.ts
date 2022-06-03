@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { Document } from 'mongoose';
 import shortId = require('shortid');
 
@@ -39,7 +40,6 @@ export interface PackSetting {
     defaultValue: string;
     description: string;
     availableValues: Array<any>;
-
 }
 
 @Schema()
@@ -57,10 +57,11 @@ export class Pack {
     settings: Array<any>;
 
     @ApiProperty()
-    @Prop()
     serverState: PackServerState;
 
     @ApiProperty()
     @Prop()
     type: PackType;
 }
+
+export const PackSchema = SchemaFactory.createForClass(Pack);

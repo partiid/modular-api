@@ -1,4 +1,3 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
@@ -6,7 +5,6 @@ import { IsIn, Matches, MaxLength, MinLength } from 'class-validator';
 import shortid = require('shortid');
 import * as dayjs from 'dayjs';
 import { Exclude } from 'class-transformer';
-
 
 export type UserDocument = User & Document;
 
