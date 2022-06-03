@@ -6,6 +6,7 @@ import {
     Patch,
     Param,
     Delete,
+    Put,
 } from '@nestjs/common';
 import { UserPacksService } from './user-packs.service';
 import { CreateUserPackDto } from './dto/create-user-pack.dto';
@@ -30,7 +31,7 @@ export class UserPacksController {
         return this.userPacksService.getUserPack(+id);
     }
 
-    @Patch(':id')
+    @Put(':id')
     update(
         @Param('id') id: string,
         @Body() updateUserPackDto: UpdateUserPackDto,

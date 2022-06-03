@@ -24,12 +24,12 @@ export class UsersController {
 
     //TODO: implement guard that will check if request comes from the user that actually calls this route (or admin)
     @Get('/:login')
-    async getUser(@Res() res, @Param('login') login: string) {
-        return res.send(await this.UsersService.getByUsername(login));
+    async getUser(@Param('login') login: string) {
+        return await this.UsersService.getByUsername(login);
     }
 
     @Post()
-    async createUser(@Res() res, @Body() user: User) {
-        return res.send(await this.UsersService.create(user));
+    async createUser(@Body() user: User) {
+        return await this.UsersService.create(user);
     }
 }
