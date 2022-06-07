@@ -6,6 +6,11 @@ import { PackServerState, PackSetting } from '../packs/pack.schema';
 
 export type UserPackDocument = UserPack & Document;
 
+export interface UserPackSetting {
+    name: string;
+    value: any;
+    values?: Array<any>;
+}
 @Schema()
 export class UserPack {
     @Prop()
@@ -21,7 +26,7 @@ export class UserPack {
 
     @ApiProperty()
     @Prop()
-    settings: Array<PackSetting>;
+    settings: Array<UserPackSetting>;
 
     @ApiProperty()
     @Prop()

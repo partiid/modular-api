@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserPackDto } from './dto/create-user-pack.dto';
 import { UpdateUserPackDto } from './dto/update-user-pack.dto';
@@ -10,8 +14,22 @@ export class UserPacksService {
         @InjectModel('UserPack')
         private UserPackSchema: Model<UserPackDocument>,
     ) {}
-    create(createUserPackDto: CreateUserPackDto) {
-        return 'This action adds a new userPack';
+    /**
+     *
+     * @description this method will add userPack object to the collection
+     * @returns userPack
+     */
+    async create(dto: UserPack): Promise<UserPack> {
+        let userPack = null;
+        try {
+            userPack = await this.UserPackSchema.create(dto);
+        } catch (err) {
+            throw new InternalServerErrorException(err);
+        }
+        if (!userPack) {
+            throw new ConflictException('UserPack not created');
+        }
+        return userPack;
     }
 
     async getUserPacks(id: string): Promise<UserPack[]> {

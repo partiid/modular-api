@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiQuery } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
 import { IsIn } from 'class-validator';
 import { Document } from 'mongoose';
@@ -63,9 +63,9 @@ export class Pack {
     @Prop()
     serverState: PackServerState;
 
+    @ApiProperty()
     @IsIn(Object.values(PackType))
     @Prop()
-    @ApiProperty({})
     type: PackType;
 }
 

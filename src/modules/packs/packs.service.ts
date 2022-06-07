@@ -28,8 +28,12 @@ export class PacksService {
         return pack;
     }
 
-    getPacks() {
-        return `This action returns all packs`;
+    async getPacks(): Promise<Pack[]> {
+        try {
+            return await this.PackModel.find().exec();
+        } catch (err) {
+            throw new InternalServerErrorException(err);
+        }
     }
 
     getPack(id: number) {
