@@ -10,14 +10,14 @@ import {
 import { PacksService } from './packs.service';
 import { CreatePackDto } from './dto/createPack.dto';
 import { UpdatePackDto } from './dto/updatePack.dto';
-
+import { Pack } from './pack.schema';
 @Controller('packs')
 export class PacksController {
     constructor(private readonly packsService: PacksService) {}
 
     @Post()
-    create(@Body() createPackDto: CreatePackDto) {
-        return this.packsService.create(createPackDto);
+    create(@Body() dto: Pack) {
+        return this.packsService.create(dto);
     }
 
     @Get()

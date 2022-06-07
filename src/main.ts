@@ -11,6 +11,7 @@ import {
     MongooseValidationErrorFilter,
     MongoErrorFilter,
 } from './filters/index';
+import { ApiResponseInterceptor } from './interceptors/ApiResponse.interceptor';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -27,7 +28,9 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new MongooseValidationErrorFilter());
     app.useGlobalFilters(new MongoErrorFilter());
-    //TODO: implement global interceptors to standarize response
+
+    //standarize api response for success
+    app.useGlobalInterceptors(new ApiResponseInterceptor());
     //setup passport
     app.use(passport.initialize());
     //setup sessions

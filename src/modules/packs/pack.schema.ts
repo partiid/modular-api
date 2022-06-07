@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import { IsIn } from 'class-validator';
 import { Document } from 'mongoose';
 import shortId = require('shortid');
@@ -46,26 +46,26 @@ export interface PackSetting {
 
 @Schema()
 export class Pack {
-    @ApiProperty()
+    @Exclude()
     @Prop({ default: shortId.generate })
     pack_id: string;
 
+    @Prop({ required: true })
     @ApiProperty()
-    @Prop()
     name: string;
 
-    @ApiProperty()
-    @Prop()
-    settings: Array<any>;
+    @ApiProperty({})
+    @Prop({})
+    settings: Array<PackSetting>;
 
     @ApiProperty()
     @IsIn(Object.values(PackServerState))
     @Prop()
     serverState: PackServerState;
 
-    @ApiProperty()
     @IsIn(Object.values(PackType))
     @Prop()
+    @ApiProperty({})
     type: PackType;
 }
 

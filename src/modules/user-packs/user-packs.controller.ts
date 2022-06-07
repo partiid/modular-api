@@ -12,7 +12,7 @@ import { UserPacksService } from './user-packs.service';
 import { CreateUserPackDto } from './dto/create-user-pack.dto';
 import { UpdateUserPackDto } from './dto/update-user-pack.dto';
 
-@Controller('user-packs')
+@Controller('/userPacks')
 export class UserPacksController {
     constructor(private readonly userPacksService: UserPacksService) {}
 
@@ -21,9 +21,9 @@ export class UserPacksController {
         return this.userPacksService.create(createUserPackDto);
     }
 
-    @Get()
-    getUserPacks() {
-        return this.userPacksService.getUserPacks();
+    @Get(':id')
+    getUserPacks(@Param('id') id: string) {
+        return this.userPacksService.getUserPacks(id);
     }
 
     @Get(':id')

@@ -14,8 +14,10 @@ export class UserPacksService {
         return 'This action adds a new userPack';
     }
 
-    async getUserPacks(): Promise<UserPack[]> {
-        return await this.UserPackSchema.find().exec();
+    async getUserPacks(id: string): Promise<UserPack[]> {
+        return await this.UserPackSchema.find({
+            user_id: id,
+        }).exec();
     }
 
     getUserPack(id: number) {

@@ -8,6 +8,8 @@ import {
 
 import { InternalServerErrorException } from '@nestjs/common';
 
+import { ApiResponse } from '../interfaces/index';
+
 @Catch(InternalServerErrorException)
 export class MongoErrorFilter implements ExceptionFilter {
     catch(exception: InternalServerErrorException, host: ArgumentsHost) {
@@ -20,11 +22,14 @@ export class MongoErrorFilter implements ExceptionFilter {
 
         const error = exception.getResponse();
         if (error.hasOwnProperty('code') && error.hasOwnProperty('keyValue')) {
-            return response.status(400).json({
-                statusCode: 400,
+            const apiResponse: ApiResponse<any> = {
+                status: 400,
                 createdBy: 'MongoErrorFilter',
                 errors: [error],
-            });
+                data: [],
+            };
+
+            return response.status(400).json(apiResponse);
         }
 
         Logger.error(

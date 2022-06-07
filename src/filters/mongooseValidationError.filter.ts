@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Error } from 'mongoose';
 import ValidationError = Error.ValidationError;
-
+import { ApiResponse } from '../interfaces/index';
 @Catch(ValidationError)
 export class MongooseValidationErrorFilter implements ExceptionFilter {
     catch(exception: ValidationError, host: ArgumentsHost): any {
@@ -9,10 +9,13 @@ export class MongooseValidationErrorFilter implements ExceptionFilter {
         const response = ctx.getResponse();
         const request = ctx.getRequest<Request>();
 
-        return response.status(400).json({
-            statusCode: 400,
-            createdBy: 'ValidationErrorFilter',
-            errors: exception.errors,
-        });
+        const apiResponse: ApiResponse<any> = {
+            status: 400,
+            createdBy: 'MongooseValidationErrorFilter',
+            errors: [exception.errors],
+            data: [],
+        };
+
+        return response.status(400).json(apiResponse);
     }
 }

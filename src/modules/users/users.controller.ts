@@ -11,10 +11,14 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument, User } from './user.schema';
+import { UserPacksService } from '../user-packs/user-packs.service';
 
-@Controller('users')
+@Controller('/users')
 export class UsersController {
-    constructor(private readonly UsersService: UsersService) {}
+    constructor(
+        private readonly UsersService: UsersService,
+        private readonly UserPacksService: UserPacksService,
+    ) {}
 
     //@UseGuards(AuthenticatedGuard)
     @Get()
@@ -31,5 +35,10 @@ export class UsersController {
     @Post()
     async createUser(@Body() user: User) {
         return await this.UsersService.create(user);
+    }
+
+    @Get('/:id/packs')
+    async getUserPacks(@Param('id') id: string) {
+        return await this.UserPacksService.getUserPacks(id);
     }
 }

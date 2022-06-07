@@ -1,11 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreatePackDto } from './dto/createPack.dto';
 import { UpdatePackDto } from './dto/updatePack.dto';
+import { Pack, PackDocument } from './pack.schema';
+import { Model } from 'mongoose';
+import {
+    ConflictException,
+    InternalServerErrorException,
+} from '@nestjs/common';
 
 @Injectable()
 export class PacksService {
-    create(createPackDto: CreatePackDto) {
-        return 'This action adds a new pack';
+    constructor(
+        @InjectModel('Pack') private readonly PackModel: Model<PackDocument>,
+    ) {}
+    async create(dto: Pack): Promise<Pack> {
+        const newPack = new this.PackModel(dto);
+        let pack = null;
+        try {
+            pack = await newPack.save();
+        } catch (err) {
+            throw new InternalServerErrorException(err);
+        }
+        if (!newPack) {
+            throw new ConflictException('Pack not created');
+        }
+        return pack;
     }
 
     getPacks() {

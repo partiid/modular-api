@@ -12,5 +12,6 @@ import { UserPackSchema } from './user-pack.schema';
 
     controllers: [UserPacksController],
     providers: [UserPacksService],
+    exports: [UserPacksService],
 })
 export class UserPacksModule {}
