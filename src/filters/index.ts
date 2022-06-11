@@ -1,4 +1,4 @@
-import { MongoErrorFilter } from './mongoError.filter';
-import { MongooseValidationErrorFilter } from './mongooseValidationError.filter';
+export { MongoErrorFilter } from './mongoError.filter';
+export { MongooseValidationErrorFilter } from './mongooseValidationError.filter';
 
-export { MongoErrorFilter, MongooseValidationErrorFilter };
+//export { MongoErrorFilter, MongooseValidationErrorFilter };

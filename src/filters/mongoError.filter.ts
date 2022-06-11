@@ -21,7 +21,11 @@ export class MongoErrorFilter implements ExceptionFilter {
             exception.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
 
         const error = exception.getResponse();
-        if (error.hasOwnProperty('code') && error.hasOwnProperty('keyValue')) {
+        if (
+            (error.hasOwnProperty('code') &&
+                error.hasOwnProperty('keyValue')) ||
+            (error.hasOwnProperty('message') && error.hasOwnProperty('errors'))
+        ) {
             const apiResponse: ApiResponse<any> = {
                 status: 400,
                 createdBy: 'MongoErrorFilter',

@@ -4,9 +4,9 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserPackDto } from './dto/create-user-pack.dto';
-import { UpdateUserPackDto } from './dto/update-user-pack.dto';
+
 import { Model } from 'mongoose';
+import { RemoveUserPackDto } from './dto/remove-user-pack.dto';
 import { UserPackSchema, UserPackDocument, UserPack } from './user-pack.schema';
 @Injectable()
 export class UserPacksService {
@@ -21,14 +21,31 @@ export class UserPacksService {
      */
     async create(dto: UserPack): Promise<UserPack> {
         let userPack = null;
+        let userPackExists = null;
         try {
-            userPack = await this.UserPackSchema.create(dto);
+            userPackExists = await this.UserPackSchema.findOne({
+                pack_id: dto.pack_id,
+                user_id: dto.user_id,
+            }).exec();
+            //check if user pack is already assigned
         } catch (err) {
             throw new InternalServerErrorException(err);
+        } finally {
+            try {
+                if (!userPackExists) {
+                    userPack = await this.UserPackSchema.create(dto);
+                } else {
+                    throw new ConflictException('User pack already exists');
+                }
+            } catch (err) {
+                throw new InternalServerErrorException(err);
+            }
+
+            if (!userPack) {
+                throw new ConflictException('UserPack not created');
+            }
         }
-        if (!userPack) {
-            throw new ConflictException('UserPack not created');
-        }
+
         return userPack;
     }
 
@@ -38,15 +55,24 @@ export class UserPacksService {
         }).exec();
     }
 
-    getUserPack(id: number) {
-        return `This action returns a #${id} userPack`;
+    /**get user pack settings */
+    async getUserPackSettings(id: string): Promise<UserPack> {
+        return await this.UserPackSchema.findOne({
+            pack_id: id,
+        }).exec();
     }
 
-    update(id: number, updateUserPackDto: UpdateUserPackDto) {
+    update(id: number) {
         return `This action updates a #${id} userPack`;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} userPack`;
+    async remove(dto: RemoveUserPackDto): Promise<unknown> {
+        const { user_id, pack_id } = dto;
+        const result = await this.UserPackSchema.deleteOne({
+            pack_id,
+            user_id,
+        }).exec();
+
+        return result;
     }
 }

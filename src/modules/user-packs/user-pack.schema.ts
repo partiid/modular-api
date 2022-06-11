@@ -1,12 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
-import { Exclude } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { PackServerState, PackSetting } from '../packs/pack.schema';
 
 export type UserPackDocument = UserPack & Document;
 
-export interface UserPackSetting {
+export class UserPackSetting {
+    constructor(partial: Partial<UserPackSetting>) {
+        Object.assign(this, partial);
+    }
+
     name: string;
     value: any;
     values?: Array<any>;
@@ -17,15 +21,18 @@ export class UserPack {
     userPack_id: string;
 
     @ApiProperty()
-    @Prop({})
+    @Prop({ required: true })
     user_id: string;
 
     @ApiProperty()
-    @Prop({})
+    @Prop({ required: true })
     pack_id: string;
 
     @ApiProperty()
     @Prop()
+    @Transform((value) => {
+        return new UserPackSetting(value);
+    })
     settings: Array<UserPackSetting>;
 
     @ApiProperty()

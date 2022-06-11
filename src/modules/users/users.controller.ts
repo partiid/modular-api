@@ -37,6 +37,7 @@ export class UsersController {
         return await this.UsersService.create(user);
     }
 
+    
     @Get('/:id/packs')
     async getUserPacks(@Param('id') id: string) {
         return await this.UserPacksService.getUserPacks(id);

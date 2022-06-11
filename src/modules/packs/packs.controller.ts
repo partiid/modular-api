@@ -11,7 +11,7 @@ import { PacksService } from './packs.service';
 import { CreatePackDto } from './dto/createPack.dto';
 import { UpdatePackDto } from './dto/updatePack.dto';
 import { Pack } from './pack.schema';
-@Controller('packs')
+@Controller('/packs')
 export class PacksController {
     constructor(private readonly packsService: PacksService) {}
 

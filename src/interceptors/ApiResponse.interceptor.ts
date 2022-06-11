@@ -16,6 +16,8 @@ export class ApiResponseInterceptor<T>
         context: ExecutionContext,
         next: CallHandler,
     ): Observable<ApiResponse<T>> {
+        const ctx = context.switchToHttp().getResponse();
+
         return next.handle().pipe(
             map((data) => {
                 const response: ApiResponse<T> = {

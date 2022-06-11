@@ -9,8 +9,7 @@ import {
     Put,
 } from '@nestjs/common';
 import { UserPacksService } from './user-packs.service';
-import { CreateUserPackDto } from './dto/create-user-pack.dto';
-import { UpdateUserPackDto } from './dto/update-user-pack.dto';
+import { RemoveUserPackDto } from './dto/remove-user-pack.dto';
 import { UserPack } from './user-pack.schema';
 
 @Controller('/users/packs/')
@@ -26,6 +25,17 @@ export class UserPacksController {
     @Post()
     assignPackToTheUser(@Body() dto: UserPack) {
         return this.userPacksService.create(dto);
+    }
+
+    @Delete('/:userId/:packId')
+    async removePackFromTheUser(
+        @Param('userId') userId: string,
+        @Param('packId') packId: string,
+    ) {
+        const dto = new RemoveUserPackDto();
+        dto.pack_id = packId;
+        dto.user_id = userId;
+        return await this.userPacksService.remove(dto);
     }
 
     // @Get(':id')
